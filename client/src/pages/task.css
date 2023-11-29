@@ -1,0 +1,24 @@
+.task {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.task_title {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.task_description {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.task_date {
+    color: #777;
+    font-style: italic;
+    text-align: end;
+}

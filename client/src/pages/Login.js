@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import axios from 'axios';
 import './login.css'
 
 const Login = () => {
@@ -25,7 +25,17 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            
+            const response = await axios.post('http://localhost:4000/login', loginData);
+            const cookies = document.cookie;
+            const cookieArray = cookies.split('; ');
+
+            const authTokenCookie = cookieArray.find(cookie => cookie.startsWith('authToken='));
+
+            let token;
+            if (authTokenCookie) {
+                token = authTokenCookie.split('=')[1];
+            }
+            login(token);
             navigate('/home');
         } catch (error) {
             console.error('Błąd logowania:', error);
