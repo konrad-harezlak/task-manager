@@ -6,35 +6,35 @@ import { useAuth } from './AuthContext';
 import './home.css'
 
 const Home = () => {
-    const { logout } = useAuth();
-
+    const { logout, user } = useAuth();
+   
     return (
 
         <div className='home_container'>
 
-
+        <h1>Witaj, {user && user.username}!</h1>
             <div className='tasks'>
                 <h2>Tasks:</h2>
             </div>
             <div className='create_task'>
                 <input className='title' type='text' placeholder='Title'></input>
                 <input className='description' type='text' placeholder='Description'></input>
-                <button onClick=''> <FontAwesomeIcon className='font' icon={faPlus} /></button>
+                <button /* onClick={} */> <FontAwesomeIcon className='font' icon={faPlus} /></button>
             </div>
             <div className='file_container'>
 
 
                 <div className='file_transfer'>
                     <input className='file' type='file' ></input>
-                    <button onClick=''> <FontAwesomeIcon className='font' icon={faPaperPlane} /></button>
+                    <button /* onClick={} */> <FontAwesomeIcon className='font' icon={faPaperPlane} /></button>
                 </div>
                 <div className='pdf_container'>
                     <h2>Download your tasks</h2>
-                    <select class="task_select">
+                    <select className="task_select">
                         <option value="PDF">PDF (For user view)</option>
                         <option value="TXT">TXT (Json file, to save your tasks)</option>
                     </select>
-                    <button onClick=''> <FontAwesomeIcon className='font' icon={faDownload} /></button>
+                    <button /* onClick={} */> <FontAwesomeIcon className='font' icon={faDownload} /></button>
                 </div>
             </div>
             <div className='logout_container'>

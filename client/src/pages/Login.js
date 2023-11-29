@@ -26,16 +26,9 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:4000/login', loginData);
-            const cookies = document.cookie;
-            const cookieArray = cookies.split('; ');
-
-            const authTokenCookie = cookieArray.find(cookie => cookie.startsWith('authToken='));
-
-            let token;
-            if (authTokenCookie) {
-                token = authTokenCookie.split('=')[1];
-            }
-            login(token);
+            const user = response.data.user.rows[0];
+            console.log(user.username)
+            login(user);
             navigate('/home');
         } catch (error) {
             console.error('Błąd logowania:', error);

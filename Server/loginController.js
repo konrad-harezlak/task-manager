@@ -18,9 +18,9 @@ const loginUser = async (req, res) => {
         }
 
 
-        const token = jwt.sign({ userId: user.rows[0].userid }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ user: user.rows[0] }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.cookie('authToken', token);
-        res.redirect('/home');
+        res.status(200).json({user,token})
 
     } catch (error) {
         console.error('Błąd logowania', error);
