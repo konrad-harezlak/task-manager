@@ -5,10 +5,13 @@ const routes = require('./routes');
 const pool = require('./pool'); 
 require('dotenv').config();
 const port = process.env.PORT;
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use('/', routes);
 

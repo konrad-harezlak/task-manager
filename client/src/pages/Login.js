@@ -27,7 +27,6 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:4000/login', loginData);
             const user = response.data.user.rows[0];
-            console.log(user.username)
             login(user);
             navigate('/home');
         } catch (error) {
