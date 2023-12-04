@@ -4,12 +4,14 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { faSignOut, faPlus, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
+import Task from './task'
 import './home.css'
 
 const Home = () => {
     const { logout, user } = useAuth();
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [tasks, setTasks] = useState([]);
     const [taskData, setTaskData] = useState({
         title: '',
         description: ''
@@ -24,6 +26,18 @@ const Home = () => {
                 console.log("Error with fetching categories: ", error);
             }
         }
+
+        const fetchTasks = async () => {
+            try {
+                const response = await axios.post('http://localhost:4000/tasks', user)
+                console.log(response.data.rows)
+                setTasks([response.data.rows])
+                
+            } catch (error) {
+                console.log("Error with fetching tasks");
+            }
+        }
+        fetchTasks();
         fetchCategories();
     }, []);
 
@@ -55,7 +69,7 @@ const Home = () => {
             category.style.border = ''
         console.log(selectedCategory)
         try {
-            await axios.post('http://localhost:4000/tasks',{ taskData, selectedCategory,user});
+            await axios.post('http://localhost:4000/addTask', { taskData, selectedCategory, user });
             alert('Task addition completed.')
         } catch (error) {
             console.log("Error with adding a task: ", error)
@@ -70,6 +84,15 @@ const Home = () => {
             <h1>Witaj, {user && user.username}!</h1>
             <div className='tasks'>
                 <h2>Tasks:</h2>
+                    {tasks.map((task,index) => (
+                         <Task
+                         key={index}
+                         title={task[index].title}
+                         description={task[index].description}
+                         date={task[index].datecreate}
+                         
+                         />
+                    ))}
             </div>
             <div className='create_task'>
                 <input
@@ -89,7 +112,7 @@ const Home = () => {
                 <select
                     id='category'
                     value={selectedCategory}
-                    onChange={(e) => { setSelectedCategory(e.target.value)}}
+                    onChange={(e) => { setSelectedCategory(e.target.value) }}
                 >
                     <option value={-1} >Wybierz Kategorie</option>
                     {categories.map((category, index) => (

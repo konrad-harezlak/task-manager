@@ -8,7 +8,8 @@ const db = require('./pool');
 
 router.post('/register', registrationController.registerUser);
 router.post('/login', loginController.loginUser);
-router.post('/tasks', taskController.addTask);
+router.post('/addTask', taskController.addTask);
 router.post('/categories',taskController.getCategories)
+router.post('/tasks',taskController.getTasks)
 
 module.exports = router;
