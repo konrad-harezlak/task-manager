@@ -11,5 +11,6 @@ router.post('/login', loginController.loginUser);
 router.post('/addTask', taskController.addTask);
 router.post('/categories',taskController.getCategories)
 router.post('/tasks',taskController.getTasks)
+router.post('/deleteTask',taskController.deleteTask)
 
 module.exports = router;

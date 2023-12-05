@@ -17,6 +17,19 @@ const Home = () => {
         description: ''
     })
 
+    const fetchTasks = async (callback) => {
+        try {
+            const response = await axios.post('http://localhost:4000/tasks', { user })
+            setTasks([...response.data.rows])
+            console.log("tasks fetched successfully: ", tasks)
+            if (callback) {
+                callback();
+            }
+        } catch (error) {
+            console.log("Error with fetching tasks");
+        }
+    }
+
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -27,16 +40,7 @@ const Home = () => {
             }
         }
 
-        const fetchTasks = async () => {
-            try {
-                const response = await axios.post('http://localhost:4000/tasks', user)
-                console.log(response.data.rows)
-                setTasks([response.data.rows])
-                
-            } catch (error) {
-                console.log("Error with fetching tasks");
-            }
-        }
+
         fetchTasks();
         fetchCategories();
     }, []);
@@ -60,19 +64,26 @@ const Home = () => {
         }
         else
             title.style.border = ''
-        if (selectedCategory === "") {
+        if (selectedCategory == -1) {
             alert('You have not selected a category!')
             category.style.border = "2px solid red"
             return;
         }
         else
             category.style.border = ''
-        console.log(selectedCategory)
         try {
-            await axios.post('http://localhost:4000/addTask', { taskData, selectedCategory, user });
-            alert('Task addition completed.')
+            await axios.post('http://localhost:4000/addTask', { taskData, selectedCategory, user })
+                .fetchTasks(() => {
+                    alert('Task addition completed.');
+                });
         } catch (error) {
             console.log("Error with adding a task: ", error)
+        }
+        try {
+            await fetchTasks();
+            alert('Task addition completed.');
+        } catch (error) {
+            console.log("Error fetching tasks: ", error);
         }
         return 0;
     }
@@ -84,15 +95,19 @@ const Home = () => {
             <h1>Witaj, {user && user.username}!</h1>
             <div className='tasks'>
                 <h2>Tasks:</h2>
-                    {tasks.map((task,index) => (
-                         <Task
-                         key={index}
-                         title={task[index].title}
-                         description={task[index].description}
-                         date={task[index].datecreate}
-                         
-                         />
-                    ))}
+                {tasks.length > 0 ? (tasks.map((task, index) => (
+                    <Task
+                        key={task.taskid}
+                        title={task.title}
+                        category={task.categoriesid}
+                        description={task.description}
+                        date={task.datecreate}
+                        taskId={task.taskid}
+                        fetchTasks={fetchTasks}
+                    />
+                ))) : (
+                    <p>No tasks.</p>
+                )}
             </div>
             <div className='create_task'>
                 <input
@@ -114,7 +129,7 @@ const Home = () => {
                     value={selectedCategory}
                     onChange={(e) => { setSelectedCategory(e.target.value) }}
                 >
-                    <option value={-1} >Wybierz Kategorie</option>
+                    <option value={-1} >Choose category</option>
                     {categories.map((category, index) => (
                         <option
                             key={index}
