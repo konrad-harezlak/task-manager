@@ -44,6 +44,8 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
         try {
             await axios.post('http://localhost:4000/changeTask', { taskId,taskData })
             await fetchTasks();
+            setIsUpdating(false);
+            setTaskData({title:'',description:''});
             alert('Task update completed')
         }
         catch (error) {

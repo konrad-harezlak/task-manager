@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { faSignOut, faPlus, faDownload } from '@fortawesome/free-solid-svg-icons';
+import jsPDF from 'jspdf';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
 import Task from './task'
@@ -12,6 +13,7 @@ const Home = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [tasks, setTasks] = useState([]);
+    const [selectedOption, setSelectedOption] = useState('PDF');
     const [taskData, setTaskData] = useState({
         title: '',
         description: ''
@@ -70,7 +72,7 @@ const Home = () => {
             category.style.border = ''
         try {
             const response = await axios.post('http://localhost:4000/addTask', { taskData, selectedCategory, user })
-                console.log(response);
+            console.log(response);
         } catch (error) {
             console.log("Error with adding a task: ", error)
         }
@@ -83,6 +85,59 @@ const Home = () => {
         return 0;
     }
 
+    const handleDownloadPdf = () => {
+        const pdf = new jsPDF();
+
+        pdf.text(20, 20, 'To-do list: ');
+
+        tasks.forEach((task, index) => {
+            const yPos = 30 + index * 40;
+
+            const taskDate = new Date(task.datecreate);
+            const isValidDate = !isNaN(taskDate.getTime());
+
+            // Funkcja do dodawania zera przed wartościami jednocyfrowymi
+            const addLeadingZero = (value) => (value < 10 ? `0${value}` : value);
+
+            // Formatowanie daty jako string
+            const formattedDate = isValidDate
+                ? `${addLeadingZero(taskDate.getUTCDate())}.${addLeadingZero(taskDate.getUTCMonth() + 1)}.${taskDate.getUTCFullYear()} ${addLeadingZero(taskDate.getUTCHours())}:${addLeadingZero(taskDate.getUTCMinutes())}`
+                : 'Invalid date';
+
+            const taskContent = `${index + 1}. title: ${task.title}\n    description: ${task.description}\n    Data: ${formattedDate}\n`;
+
+            pdf.text(20, yPos, taskContent);
+        });
+
+        pdf.save('todo-list.pdf');
+    };
+
+
+    const handleDownloadTxt = () => {
+        // Kod do generowania pliku TXT
+        // ...
+
+        // Przykładowy kod do zapisu treści do pliku TXT
+        const txtContent = tasks.map((task, index) => `${index + 1}. ${task.title}`).join('\n');
+        const blob = new Blob([txtContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'lista_zadan.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    };
+
+    const handleDownload = () => {
+        // Wywołaj odpowiednią funkcję na podstawie wybranej opcji
+        if (selectedOption === 'PDF') {
+            handleDownloadPdf();
+        } else if (selectedOption === 'TXT') {
+            handleDownloadTxt();
+        }
+    };
     return (
 
         <div className='home_container'>
@@ -146,11 +201,13 @@ const Home = () => {
                 </div>
                 <div className='pdf_container'>
                     <h2>Download your tasks</h2>
-                    <select className="task_select">
+                    <select className="task_select" onChange={(e) => setSelectedOption(e.target.value)}>
                         <option value="PDF">PDF (For user view)</option>
                         <option value="TXT">TXT (Json file, to save your tasks)</option>
                     </select>
-                    <button /* onClick={} */> <FontAwesomeIcon className='font' icon={faDownload} /></button>
+                    <button onClick={handleDownload}>
+                        <FontAwesomeIcon className='font' icon={faDownload} />
+                    </button>
                 </div>
             </div>
             <div className='logout_container'>
