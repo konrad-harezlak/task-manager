@@ -58,8 +58,8 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
     };
 
     const beautifyDate = (inputDate) => {
-        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        const formattedDate = new Date(inputDate).toLocaleString('en-US', options);
+        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' };
+        const formattedDate = new Date(inputDate).toLocaleString('en-EN', options);
         return formattedDate;
     };
 

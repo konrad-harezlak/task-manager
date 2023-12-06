@@ -92,14 +92,14 @@ const Home = () => {
 
         tasks.forEach((task, index) => {
             const yPos = 30 + index * 40;
-
+            console.log(task.datecreate)
             const taskDate = new Date(task.datecreate);
             const isValidDate = !isNaN(taskDate.getTime());
 
-            // Funkcja do dodawania zera przed wartościami jednocyfrowymi
             const addLeadingZero = (value) => (value < 10 ? `0${value}` : value);
 
-            // Formatowanie daty jako string
+            taskDate.setHours(taskDate.getHours() + 1);
+
             const formattedDate = isValidDate
                 ? `${addLeadingZero(taskDate.getUTCDate())}.${addLeadingZero(taskDate.getUTCMonth() + 1)}.${taskDate.getUTCFullYear()} ${addLeadingZero(taskDate.getUTCHours())}:${addLeadingZero(taskDate.getUTCMinutes())}`
                 : 'Invalid date';
@@ -112,13 +112,17 @@ const Home = () => {
         pdf.save('todo-list.pdf');
     };
 
-
     const handleDownloadTxt = () => {
-        // Kod do generowania pliku TXT
-        // ...
+        const tasksData = tasks.map((task, index) => ({
+            id: index + 1,
+            title: task.title,
+            description: task.description,
+            datecreate: task.datecreate,
+            categoriesid: task.categoriesid, // Dodaj pole 'categoriesid'
+        }));
 
-        // Przykładowy kod do zapisu treści do pliku TXT
-        const txtContent = tasks.map((task, index) => `${index + 1}. ${task.title}`).join('\n');
+        const txtContent = JSON.stringify(tasksData, null, 2); // Drugi argument to ilość spacji w formacie JSON, aby uzyskać czytelny tekst.
+
         const blob = new Blob([txtContent], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -131,13 +135,15 @@ const Home = () => {
     };
 
     const handleDownload = () => {
-        // Wywołaj odpowiednią funkcję na podstawie wybranej opcji
+
         if (selectedOption === 'PDF') {
             handleDownloadPdf();
         } else if (selectedOption === 'TXT') {
             handleDownloadTxt();
         }
     };
+
+
     return (
 
         <div className='home_container'>
@@ -146,6 +152,7 @@ const Home = () => {
             <div className='tasks'>
                 <h2>Tasks:</h2>
                 {tasks.length > 0 ? (tasks.map((task, index) => (
+
                     <Task
                         key={task.taskid}
                         title={task.title}
@@ -157,7 +164,8 @@ const Home = () => {
                     />
                 ))) : (
                     <p>No tasks.</p>
-                )}
+                )
+                }
             </div>
             <div className='create_task'>
                 <input
@@ -196,9 +204,10 @@ const Home = () => {
 
 
                 <div className='file_transfer'>
-                    <input className='file' type='file' ></input>
-                    <button /* onClick={} */> <FontAwesomeIcon className='font' icon={faPaperPlane} /></button>
+                    <input className='file' type='file'  ></input>
+                    <button> <FontAwesomeIcon className='font' icon={faPaperPlane} /></button>
                 </div>
+
                 <div className='pdf_container'>
                     <h2>Download your tasks</h2>
                     <select className="task_select" onChange={(e) => setSelectedOption(e.target.value)}>

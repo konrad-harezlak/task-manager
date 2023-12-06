@@ -6,7 +6,7 @@ async function addTask(req, res) {
     const categoryId = parseInt(selectedCategory) + 1;
     pool.query(`
     INSERT INTO tasks (title, description, datecreate, userid, categoriesid)
-    VALUES ($1, $2, CURRENT_TIMESTAMP, $3, $4)
+    VALUES ($1, $2, CURRENT_TIMESTAMP + interval \'1 hour\', $3, $4)
   `, [taskData.title, taskData.description, user.userid, categoryId], (error, results) => {
         if (error) {
             console.error('Error with inserting task:', error);
