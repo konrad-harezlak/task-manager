@@ -14,6 +14,7 @@ const Home = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [tasks, setTasks] = useState([]);
     const [selectedOption, setSelectedOption] = useState('PDF');
+    const [importedTasks, setImportedTasks] = useState([]);
     const [taskData, setTaskData] = useState({
         title: '',
         description: ''
@@ -143,6 +144,49 @@ const Home = () => {
         }
     };
 
+    const handleFileChange = (file) => {
+        if (!file) return;
+    
+        const reader = new FileReader();
+    
+        reader.onload = async (e) => {
+            try {
+                const fileContent = JSON.parse(e.target.result);
+                setImportedTasks(fileContent);
+            } catch (error) {
+                console.error('Error parsing file content:', error);
+            }
+        };
+    
+        reader.readAsText(file);
+    };
+
+    const handleImportTasks = async () => {
+        if (importedTasks.length === 0) {
+            alert('No tasks to import.');
+            return;
+        }
+    
+        try {
+            await Promise.all(
+                importedTasks.map(async (task) => {
+                    await axios.post('http://localhost:4000/addTask', {
+                        taskData: {
+                            title: task.title,
+                            description: task.description,
+                        },
+                        selectedCategory: task.categoriesid,
+                        user,
+                    });
+                })
+            );
+    
+            await fetchTasks();
+            alert('Tasks imported successfully.');
+        } catch (error) {
+            console.error('Error importing tasks:', error);
+        }
+    };
 
     return (
 
@@ -204,8 +248,14 @@ const Home = () => {
 
 
                 <div className='file_transfer'>
-                    <input className='file' type='file'  ></input>
-                    <button> <FontAwesomeIcon className='font' icon={faPaperPlane} /></button>
+                    <input
+                        className='file'
+                        type='file'
+                        onChange={(e) => handleFileChange(e.target.files[0])}
+                    />
+                    <button>
+                        <FontAwesomeIcon className='font' onClick={handleImportTasks} icon={faPaperPlane}  />
+                    </button>
                 </div>
 
                 <div className='pdf_container'>
