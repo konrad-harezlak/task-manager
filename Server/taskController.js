@@ -12,6 +12,7 @@ async function addTask(req, res) {
             console.error('Error with inserting task:', error);
         } else {
             console.log('Task addition completed.');
+            res.status(200).json("Task addition completed");
         }
     });
 }
@@ -29,12 +30,22 @@ async function deleteTask(req, res) {
     const { taskId } = req.body;
     await pool.query('DELETE FROM tasks WHERE taskid = $1', [taskId])
     await getTasks(req, res);
-    //res.status(200);
+}
+
+async function changeTask(req, res) {
+    const { taskId, taskData } = req.body;
+    await pool.query(`UPDATE tasks SET title = $1,
+     description = $2
+    WHERE taskId = $3; `, [taskData.title, taskData.description, taskId])
+    res.status(200).json("Task update completed")
+
 }
 module.exports = {
     addTask,
     getCategories,
     getTasks,
     deleteTask,
+    changeTask,
+
 
 }

@@ -17,14 +17,11 @@ const Home = () => {
         description: ''
     })
 
-    const fetchTasks = async (callback) => {
+    const fetchTasks = async () => {
         try {
             const response = await axios.post('http://localhost:4000/tasks', { user })
             setTasks([...response.data.rows])
             console.log("tasks fetched successfully: ", tasks)
-            if (callback) {
-                callback();
-            }
         } catch (error) {
             console.log("Error with fetching tasks");
         }
@@ -72,10 +69,8 @@ const Home = () => {
         else
             category.style.border = ''
         try {
-            await axios.post('http://localhost:4000/addTask', { taskData, selectedCategory, user })
-                .fetchTasks(() => {
-                    alert('Task addition completed.');
-                });
+            const response = await axios.post('http://localhost:4000/addTask', { taskData, selectedCategory, user })
+                console.log(response);
         } catch (error) {
             console.log("Error with adding a task: ", error)
         }

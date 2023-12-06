@@ -5,30 +5,56 @@ import './task.css';
 
 const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
     const [isUpdating, setIsUpdating] = useState(false);
+    const [taskData, setTaskData] = useState({
+        title: '',
+        description: ''
+    })
+
     const { user } = useAuth();
     const categoriesTitles = [
-            'Cleaning',
-            'Work',
-            'Meetings',
-            'Training/Fitness',
-            'Personal Development',
-            'Shopping',
-            'Cooking',
-            'Entertainment',
-            'Finance',
-            'Travel',
-            'Pet Care',
-            'Health',
-            'Home Projects',
-            'Other'
-          ];
+        'Cleaning',
+        'Work',
+        'Meetings',
+        'Training/Fitness',
+        'Personal Development',
+        'Shopping',
+        'Cooking',
+        'Entertainment',
+        'Finance',
+        'Travel',
+        'Pet Care',
+        'Health',
+        'Home Projects',
+        'Other'
+    ];
+
+    const handleDataChange = (e) => {
+        const { name, value } = e.target;
+        setTaskData({
+            ...taskData,
+            [name]: value
+        });
+    }
+
     const handleUpdate = () => {
         setIsUpdating(true);
     };
 
+    const handleUpdateData = async () => {
+        try {
+            await axios.post('http://localhost:4000/changeTask', { taskId,taskData })
+            await fetchTasks();
+            alert('Task update completed')
+        }
+        catch (error) {
+            console.log("Error with update data", error)
+        }
+    }
+
     const handleCancelUpdate = () => {
         setIsUpdating(false);
     };
+
     const beautifyDate = (inputDate) => {
         const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
         const formattedDate = new Date(inputDate).toLocaleString('en-US', options);
@@ -54,7 +80,7 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
         <div className='task'>
             <div className='task_info'>
                 <h2 className='task_title'>{title}</h2>
-                <p className='title_category'>{categoriesTitles[category-1]}</p>
+                <p className='title_category'>{categoriesTitles[category - 1]}</p>
                 <p className='task_description'>{description}</p>
                 <p className='task_date'>{beautifyDate(date)}</p>
             </div>
@@ -64,10 +90,30 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
                 )}
                 {isUpdating && (
                     <div className='update_inputs'>
-                        <input type='text' placeholder='Title' />
-                        <input type='text' placeholder='Description' />
-                        <input type='submit' value='Change' />
-                        <input type='submit' onClick={handleCancelUpdate} value='Cancel' />
+                        <input
+                            type='text'
+                            placeholder='Title'
+                            name='title'
+                            onChange={handleDataChange}
+                            value={taskData.title}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Description'
+                            name='description'
+                            onChange={handleDataChange}
+                            value={taskData.description}
+                        />
+                        <input
+                            type='submit'
+                            onClick={handleUpdateData}
+                            value='Change'
+                        />
+                        <input
+                            type='submit'
+                            onClick={handleCancelUpdate}
+                            value='Cancel'
+                        />
                     </div>
                 )}
                 <input type='submit' onClick={handleDeleteTask} value='delete' />
