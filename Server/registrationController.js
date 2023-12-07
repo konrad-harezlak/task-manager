@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
             [userName, email, hashedPassword]
         );
 
-        res.redirect('/');
+        res.status(200).json("Register completed.");
     } catch (error) {
         console.error('Błąd rejestracji', error);
         res.status(500).json({ message: 'Wewnętrzny błąd serwera' });

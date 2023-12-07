@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { faSignOut, faPlus, faDownload } from '@fortawesome/free-solid-svg-icons';
@@ -146,9 +147,9 @@ const Home = () => {
 
     const handleFileChange = (file) => {
         if (!file) return;
-    
+
         const reader = new FileReader();
-    
+
         reader.onload = async (e) => {
             try {
                 const fileContent = JSON.parse(e.target.result);
@@ -157,7 +158,7 @@ const Home = () => {
                 console.error('Error parsing file content:', error);
             }
         };
-    
+
         reader.readAsText(file);
     };
 
@@ -166,7 +167,7 @@ const Home = () => {
             alert('No tasks to import.');
             return;
         }
-    
+
         try {
             await Promise.all(
                 importedTasks.map(async (task) => {
@@ -180,7 +181,7 @@ const Home = () => {
                     });
                 })
             );
-    
+
             await fetchTasks();
             alert('Tasks imported successfully.');
         } catch (error) {
@@ -254,7 +255,7 @@ const Home = () => {
                         onChange={(e) => handleFileChange(e.target.files[0])}
                     />
                     <button>
-                        <FontAwesomeIcon className='font' onClick={handleImportTasks} icon={faPaperPlane}  />
+                        <FontAwesomeIcon className='font' onClick={handleImportTasks} icon={faPaperPlane} />
                     </button>
                 </div>
 
@@ -274,6 +275,13 @@ const Home = () => {
                     <FontAwesomeIcon icon={faSignOut} className='font_icon' />
                 </button>
             </div>
+            {user && user.role === "admin" && (
+                <div>
+
+                    <Link to="/admin_panel">Welcome, admin! Special content for admins.</Link>
+                </div>
+            )}
+
         </div>
 
     )

@@ -34,10 +34,8 @@ const Registration = () => {
     }
 
     try {
-      // Wysłanie danych rejestracyjnych na backend
-      const response = await axios.post('http://localhost:4000/register', userData);
+      await axios.post('http://localhost:4000/register', userData);
 
-      // Pomyślna rejestracja
       navigate('/');
     } catch (error) {
       console.error(error, '\n', error.response);

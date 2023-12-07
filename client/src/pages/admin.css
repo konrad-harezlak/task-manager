@@ -1,0 +1,31 @@
+.admin_panel_container {
+    max-width: 800px;
+    margin: 2% auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    color: #3498db;
+  }
+  
+  .user_info {
+    background-color: #ecf0f1;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+  }
+  
+  .user_info h2 {
+    color: #333;
+  }
+  
+  .user_info p {
+    color: #777;
+    font-style: italic;
+  }
+
+  
