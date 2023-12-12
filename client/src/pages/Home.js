@@ -5,7 +5,7 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { faSignOut, faPlus, faDownload } from '@fortawesome/free-solid-svg-icons';
 import jsPDF from 'jspdf';
 import { useAuth } from './AuthContext';
-import axios from 'axios';
+import axios from '../api.js';
 import Task from './task'
 import './home.css'
 
@@ -23,7 +23,7 @@ const Home = () => {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.post('https://task-manager-backend-umxh.onrender.com/tasks', { user })
+            const response = await axios.post('/tasks', { user })
             setTasks([...response.data.rows])
             console.log("tasks fetched successfully: ", tasks)
         } catch (error) {
@@ -34,7 +34,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.post('https://task-manager-backend-umxh.onrender.com/categories')
+                const response = await axios.post('/categories')
                 setCategories(response.data.rows);
             } catch (error) {
                 console.log("Error with fetching categories: ", error);
@@ -73,7 +73,7 @@ const Home = () => {
         else
             category.style.border = ''
         try {
-            const response = await axios.post('https://task-manager-backend-umxh.onrender.com/addTask', { taskData, selectedCategory, user })
+            const response = await axios.post('/addTask', { taskData, selectedCategory, user })
             console.log(response);
         } catch (error) {
             console.log("Error with adding a task: ", error)
@@ -171,7 +171,7 @@ const Home = () => {
         try {
             await Promise.all(
                 importedTasks.map(async (task) => {
-                    await axios.post('https://task-manager-backend-umxh.onrender.com/addTask', {
+                    await axios.post('/addTask', {
                         taskData: {
                             title: task.title,
                             description: task.description,

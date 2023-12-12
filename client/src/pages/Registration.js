@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api.js';
 import './registration.css';
 
 const Registration = () => {
@@ -34,7 +34,7 @@ const Registration = () => {
     }
 
     try {
-      await axios.post('https://task-manager-backend-umxh.onrender.com/register', userData);
+      await axios.post('/register', userData);
 
       navigate('/');
     } catch (error) {

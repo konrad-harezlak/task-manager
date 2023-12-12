@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'
+import axios from '../api.js';
 import { useAuth } from './AuthContext';
 import './task.css';
 
@@ -42,7 +42,7 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
 
     const handleUpdateData = async () => {
         try {
-            await axios.post('https://task-manager-backend-umxh.onrender.com/changeTask', { taskId,taskData })
+            await axios.post('/changeTask', { taskId,taskData })
             await fetchTasks();
             setIsUpdating(false);
             setTaskData({title:'',description:''});
@@ -66,7 +66,7 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
     const handleDeleteTask = async () => {
         try {
             console.log("to jest taskId: " + taskId)
-            await axios.post('https://task-manager-backend-umxh.onrender.com/deleteTask', { taskId, user });
+            await axios.post('/deleteTask', { taskId, user });
             await fetchTasks();
             alert('Task delete completed.');
         } catch (error) {

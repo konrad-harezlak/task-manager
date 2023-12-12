@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import axios from 'axios';
+import axios from '../api.js';
 import './login.css'
 
 const Login = () => {
@@ -25,7 +25,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://task-manager-backend-umxh.onrender.com/login', loginData);
+            const response = await axios.post('/login', loginData);
             const user = response.data.user.rows[0];
             login(user);
             navigate('/home');
