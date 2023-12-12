@@ -23,7 +23,7 @@ const Home = () => {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/tasks', { user })
+            const response = await axios.post('https://task-manager-backend-umxh.onrender.com/tasks', { user })
             setTasks([...response.data.rows])
             console.log("tasks fetched successfully: ", tasks)
         } catch (error) {
@@ -34,7 +34,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.post('http://localhost:4000/categories')
+                const response = await axios.post('https://task-manager-backend-umxh.onrender.com/categories')
                 setCategories(response.data.rows);
             } catch (error) {
                 console.log("Error with fetching categories: ", error);
@@ -73,7 +73,7 @@ const Home = () => {
         else
             category.style.border = ''
         try {
-            const response = await axios.post('http://localhost:4000/addTask', { taskData, selectedCategory, user })
+            const response = await axios.post('https://task-manager-backend-umxh.onrender.com/addTask', { taskData, selectedCategory, user })
             console.log(response);
         } catch (error) {
             console.log("Error with adding a task: ", error)
@@ -120,10 +120,10 @@ const Home = () => {
             title: task.title,
             description: task.description,
             datecreate: task.datecreate,
-            categoriesid: task.categoriesid, // Dodaj pole 'categoriesid'
+            categoriesid: task.categoriesid, 
         }));
 
-        const txtContent = JSON.stringify(tasksData, null, 2); // Drugi argument to ilość spacji w formacie JSON, aby uzyskać czytelny tekst.
+        const txtContent = JSON.stringify(tasksData, null, 2); 
 
         const blob = new Blob([txtContent], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
@@ -171,7 +171,7 @@ const Home = () => {
         try {
             await Promise.all(
                 importedTasks.map(async (task) => {
-                    await axios.post('http://localhost:4000/addTask', {
+                    await axios.post('https://task-manager-backend-umxh.onrender.com/addTask', {
                         taskData: {
                             title: task.title,
                             description: task.description,

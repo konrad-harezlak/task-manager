@@ -34,7 +34,7 @@ const Registration = () => {
     }
 
     try {
-      await axios.post('http://localhost:4000/register', userData);
+      await axios.post('https://task-manager-backend-umxh.onrender.com/register', userData);
 
       navigate('/');
     } catch (error) {

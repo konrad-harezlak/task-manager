@@ -42,7 +42,7 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
 
     const handleUpdateData = async () => {
         try {
-            await axios.post('http://localhost:4000/changeTask', { taskId,taskData })
+            await axios.post('https://task-manager-backend-umxh.onrender.com/changeTask', { taskId,taskData })
             await fetchTasks();
             setIsUpdating(false);
             setTaskData({title:'',description:''});
@@ -66,9 +66,8 @@ const Task = ({ title, category, description, date, taskId, fetchTasks }) => {
     const handleDeleteTask = async () => {
         try {
             console.log("to jest taskId: " + taskId)
-            await axios.post('http://localhost:4000/deleteTask', { taskId, user });
+            await axios.post('https://task-manager-backend-umxh.onrender.com/deleteTask', { taskId, user });
             await fetchTasks();
-            //const response = await axios.post('http://localhost:4000/tasks', user);
             alert('Task delete completed.');
         } catch (error) {
             console.log("Error with adding a task: ", error)

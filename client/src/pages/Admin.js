@@ -9,7 +9,7 @@ const Admin = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/users');
+            const response = await axios.post('https://task-manager-backend-umxh.onrender.com/users');
             setUsers(response.data.rows);
         } catch (error) {
             console.log("Error with fetching users: ", error);
@@ -21,7 +21,7 @@ const Admin = () => {
 
     const handleDeleteUser = async (userId) => {
         try {
-            await axios.post(`http://localhost:4000/deleteUser/`, {userId});
+            await axios.post(`https://task-manager-backend-umxh.onrender.com/deleteUser/`, {userId});
             console.log(`User with ID ${userId} deleted.`);
             fetchUsers();
         } catch (error) {
